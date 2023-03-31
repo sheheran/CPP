@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include <string>
+//using smart pointers
+#include <memory>
 using namespace std;
 
 
@@ -19,7 +21,7 @@ class IGameObject{
         virtual void Render() = 0;
 };
 
-//IGameObject is abstract class
+//Sub-class / Derived class form IGameObject parent class inherit from the parent class
 class Plane : public IGameObject{
     public:
         Plane(){}
@@ -37,13 +39,16 @@ class Boat : public IGameObject{
 //Creating enum classes for our objects
 enum class ObjectType {PLANE, BOAT};
 
-//Factory Method
+
 //IGameObject* MakeGameObjectFactory(std::string type){
-IGameObject* MakeGameObjectFactory(ObjectType type){
+//IGameObject* MakeGameObjectFactory(ObjectType type){
+//Instead of returning a row pointer returning a standard shared pointer
+
+std::shared_ptr<IGameObject> MakeGameObjectFactory(ObjectType type){
     if(ObjectType::PLANE==type){
-        return new Plane;
+        return std::make_shared<Plane>();
     }else if(ObjectType::BOAT==type){
-        return new Boat;
+        return std::make_shared<Boat>();
     }
     return nullptr;
 }
@@ -55,10 +60,10 @@ int main(){
     //Boat b;
     //Plane p;
 //insted of this 
-    IGameObject* myObject = MakeGameObjectFactory(ObjectType::PLANE);
-    IGameObject* myObject1 = MakeGameObjectFactory(ObjectType::BOAT);
+    std::shared_ptr<IGameObject> myObject = MakeGameObjectFactory(ObjectType::PLANE);
+    std::shared_ptr<IGameObject> myObject1 = MakeGameObjectFactory(ObjectType::BOAT);
 
-    delete myObject;
-    delete myObject1;
+    //delete myObject;
+    //delete myObject1;
     return 0;
 }
